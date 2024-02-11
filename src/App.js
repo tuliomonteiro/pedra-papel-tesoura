@@ -16,31 +16,34 @@ function Score() {}
 
 function Game() {
   const [userOption, setUserOption] = useState("");
+  const [result, setResult] = useState("");
 
   function setOption(e) {
-    console.log(e.target.value);
     setUserOption(e.target.value);
+  }
+
+  function OnResetHanlder() {
+    setResult("");
   }
 
   function onResultHandle(e) {
     const possibilities = ["pedra", "papel", "tesoura"];
-    let shuffled = possibilities
-      .map((value) => ({ value, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value);
-
-    // console.log(shuffled);
-    if (shuffled[0] === userOption) {
-      console.log(
-        `Ocorreu um empate o computador escolheu${shuffled[0]} e o usuario ${userOption}`
+    let shuffled = Math.floor(Math.random() * 3);
+    if (possibilities[shuffled] === userOption) {
+      setResult("Empate, jogue de novo");
+    } else if (
+      possibilities[shuffled] === "tesoura" &&
+      userOption === "papel"
+    ) {
+      setResult(
+        `o computador escolheu ${possibilities[shuffled]} e o usuario escolheu ${userOption}, portanto o computador ganhou.`
       );
-    } else if (shuffled[0] === "tesoura" && userOption === "papel") {
-      console.log(
-        `o computador escolheu${shuffled[0]} e o usuario escolheu ${userOption}, portanto o computador ganhou`
-      );
-    } else if (shuffled[0] === "papel" && userOption === "tesoura") {
-      console.log(
-        `O usuario ganhou pois escolheu ${userOption} e o computador ${shuffled[0]}`
+    } else if (
+      possibilities[shuffled] === "papel" &&
+      userOption === "tesoura"
+    ) {
+      setResult(
+        `O usuario ganhou pois escolheu ${userOption} e o computador ${possibilities[shuffled]}`
       );
     }
   }
@@ -56,7 +59,11 @@ function Game() {
       <button value="tesoura" onClick={setOption}>
         Tesoura
       </button>
+      <button onClick={OnResetHanlder}>Resetar</button>
       <button onClick={onResultHandle}>Resultado</button>
+      <div>
+        <p>{result}</p>
+      </div>
     </div>
   );
 }
